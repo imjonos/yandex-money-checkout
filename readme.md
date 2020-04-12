@@ -9,6 +9,7 @@
 
 ## Usage
 This is package provide base Controller and views for implement Yandex Money payments
+It's provide webhook url https://some.com/payments/webhook
 
 Config file:
 
