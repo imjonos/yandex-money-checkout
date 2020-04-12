@@ -1,0 +1,44 @@
+{
+    "name": "codersstudio/yandex-money-checkout",
+    "description": "Package use Yandex Money SDK.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "Eugeny Nosenko",
+            "email": "info@coders.studio"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^6.0",
+        "yandex-money/yandex-checkout-sdk-php": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodersStudio\\YandexMoneyCheckout\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodersStudio\\YandexMoneyCheckout\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodersStudio\\YandexMoneyCheckout\\YandexMoneyCheckoutServiceProvider"
+            ],
+            "aliases": {
+                "Notifications": "CodersStudio\\YandexMoneyCheckout\\Facades\\YandexMoneyCheckout"
+            }
+        }
+    },
+    "require-dev": {
+    }
+}
