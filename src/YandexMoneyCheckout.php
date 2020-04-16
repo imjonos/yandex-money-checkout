@@ -14,7 +14,7 @@ class YandexMoneyCheckout
     private Client $_client;
 
     /**
-     * Create a new controller instance.
+     * Create a new instance.
      *
      * @return void
      */
