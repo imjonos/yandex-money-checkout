@@ -4,6 +4,7 @@ namespace CodersStudio\YandexMoneyCheckout\Http\Controllers;
 
 use CodersStudio\YandexMoneyCheckout\Facades\YandexMoneyCheckout;
 use CodersStudio\YandexMoneyCheckout\Http\Requests\StoreRequest;
+use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyCard;
 use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyPayment;
 use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyStatus;
 use Illuminate\Http\Request;
@@ -87,9 +88,19 @@ class PaymentController extends Controller
     {
         $data = $request->get('object', null);
         if($data){
+            $paymentMethod =  $data["payment_method"];
             $payment = YandexMoneyPayment::where('payment_id', $data['id'])->firstOrFail();
             $status = YandexMoneyStatus::where('name', $data['status'])->firstOrFail();
             $payment->update(['yandex_money_status_id' => $status->id]);
+            if($paymentMethod['type'] === 'bank_card'){
+                $card = $paymentMethod['card'];
+                YandexMoneyCard::updateOrCreate([
+                    "first6" => $card['first6'],
+                    "last4" => $card['last4'],
+                    "card_type" => $card['card_type'],
+                    "yandex_money_payment_id" => $payment->id
+                ]);
+            }
         }
         return response()->json([], 200);
     }
