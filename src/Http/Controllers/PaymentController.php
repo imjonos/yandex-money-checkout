@@ -2,6 +2,7 @@
 
 namespace CodersStudio\YandexMoneyCheckout\Http\Controllers;
 
+use CodersStudio\YandexMoneyCheckout\Events\PaymentStatusChanged;
 use CodersStudio\YandexMoneyCheckout\Facades\YandexMoneyCheckout;
 use CodersStudio\YandexMoneyCheckout\Http\Requests\StoreRequest;
 use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyCard;
@@ -101,6 +102,7 @@ class PaymentController extends Controller
                     "yandex_money_payment_id" => $payment->id
                 ]);
             }
+            event(new PaymentStatusChanged($payment));
         }
         return response()->json([], 200);
     }
