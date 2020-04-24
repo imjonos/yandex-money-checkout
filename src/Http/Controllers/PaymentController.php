@@ -51,7 +51,7 @@ class PaymentController extends Controller
             ],
             'confirmation' => [
                 'type' => 'redirect',
-                'return_url' => route('yandexmoneycheckout.payments.redirect', ['order' => $data['order_id']])
+                'return_url' => route('yandexmoneycheckout.payments.redirect', ['orderId' => $data['order_id']])
             ],
             'capture' => config('yandex-money-checkout.capture'),
             'save_payment_method' => config('yandex-money-checkout.save_payment_method'),
@@ -60,11 +60,8 @@ class PaymentController extends Controller
                 'order_id' => $data['order_id']
             ]
         ];
-
         $response = YandexMoneyCheckout::create($paymentData);
-
         if(!$response) abort(400);
-
         //get confirmation url
         $confirmationUrl = $response->getConfirmation()->getConfirmationUrl();
 
@@ -121,7 +118,7 @@ class PaymentController extends Controller
         $failedRoute = config('yandex-money-checkout.failed_route');
         $successRoute = config('yandex-money-checkout.success_route');
         $redirectRoute = ($payment->status->name === 'waiting_for_capture')?$successRoute:$failedRoute;
-        return response()->redirectToRoute($redirectRoute, ['order' => $orderId]);
+        return response()->redirectToRoute($redirectRoute, ['orderId' => $orderId]);
     }
 
     /**

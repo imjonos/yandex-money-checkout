@@ -24,8 +24,8 @@ Config file:
     'capture' => false,
 
     //Redirect
-    //Should include order_id in url template
-    //Example: /test/{order_id}
+    //Should include orderId in url template
+    //Example: /test/{orderId}
      'success_route' => env('YANDEX_MONEY_SUCCESS_ROUTE', 'yandexmoneycheckout.payments.success'),
      'failed_route' => env('YANDEX_MONEY_FAIL_ROUTE', 'yandexmoneycheckout.payments.failed')
 
