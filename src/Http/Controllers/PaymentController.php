@@ -112,16 +112,16 @@ class PaymentController extends Controller
      * Check the status of the payment after user confirmation
      *
      * @param Request $request
-     * @param int $order
+     * @param int $orderId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function redirect(Request $request, int $order)
+    public function redirect(Request $request, int $orderId)
     {
-        $payment = YandexMoneyPayment::where('order_id', $order)->orderBy('id', 'DESC')->firstOrFail();
+        $payment = YandexMoneyPayment::where('order_id', $orderId)->orderBy('id', 'DESC')->firstOrFail();
         $failedRoute = config('yandex-money-checkout.failed_route');
         $successRoute = config('yandex-money-checkout.success_route');
         $redirectRoute = ($payment->status->name === 'waiting_for_capture')?$successRoute:$failedRoute;
-        return response()->redirectToRoute($redirectRoute, ['order' => $order]);
+        return response()->redirectToRoute($redirectRoute, ['order' => $orderId]);
     }
 
     /**
