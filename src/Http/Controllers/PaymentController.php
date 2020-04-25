@@ -118,7 +118,7 @@ class PaymentController extends Controller
         $failedRoute = config('yandex-money-checkout.failed_route');
         $successRoute = config('yandex-money-checkout.success_route');
         $redirectRoute = ($payment->status->name === 'waiting_for_capture')?$successRoute:$failedRoute;
-        return response()->redirectToRoute($redirectRoute, ['orderId' => $orderId]);
+        return response()->redirectToRoute($redirectRoute, ['order' => $orderId]);
     }
 
     /**
