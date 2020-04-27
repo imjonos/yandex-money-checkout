@@ -16,22 +16,10 @@ class YandexMoneyPayment extends Model
 
     /**
      * Get status
-     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function status()
     {
         return $this->belongsTo('CodersStudio\YandexMoneyCheckout\Models\YandexMoneyStatus', 'yandex_money_status_id', 'id');
     }
-
-    /**
-     * Get card
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function card()
-    {
-        return $this->hasOne('CodersStudio\YandexMoneyCheckout\Models\YandexMoneyCard', 'yandex_money_payment_id', 'id');
-    }
-
 }
