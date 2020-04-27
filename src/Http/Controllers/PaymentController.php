@@ -2,8 +2,10 @@
 
 namespace CodersStudio\YandexMoneyCheckout\Http\Controllers;
 
+use CodersStudio\YandexMoneyCheckout\Events\PaymentStatusChanged;
 use CodersStudio\YandexMoneyCheckout\Facades\YandexMoneyCheckout;
 use CodersStudio\YandexMoneyCheckout\Http\Requests\StoreRequest;
+use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyCard;
 use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyPayment;
 use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyStatus;
 use Illuminate\Http\Request;
@@ -49,7 +51,7 @@ class PaymentController extends Controller
             ],
             'confirmation' => [
                 'type' => 'redirect',
-                'return_url' => route('yandexmoneycheckout.payments.redirect', ['order' => $data['order_id']])
+                'return_url' => route('yandexmoneycheckout.payments.redirect', ['orderId' => $data['order_id']])
             ],
             'capture' => config('yandex-money-checkout.capture'),
             'save_payment_method' => config('yandex-money-checkout.save_payment_method'),
@@ -58,11 +60,8 @@ class PaymentController extends Controller
                 'order_id' => $data['order_id']
             ]
         ];
-
         $response = YandexMoneyCheckout::create($paymentData);
-
         if(!$response) abort(400);
-
         //get confirmation url
         $confirmationUrl = $response->getConfirmation()->getConfirmationUrl();
 
@@ -87,9 +86,20 @@ class PaymentController extends Controller
     {
         $data = $request->get('object', null);
         if($data){
+            $paymentMethod =  $data["payment_method"];
             $payment = YandexMoneyPayment::where('payment_id', $data['id'])->firstOrFail();
             $status = YandexMoneyStatus::where('name', $data['status'])->firstOrFail();
             $payment->update(['yandex_money_status_id' => $status->id]);
+            if($paymentMethod['type'] === 'bank_card'){
+                $card = $paymentMethod['card'];
+                YandexMoneyCard::updateOrCreate([
+                    "first6" => $card['first6'],
+                    "last4" => $card['last4'],
+                    "card_type" => $card['card_type'],
+                    "yandex_money_payment_id" => $payment->id
+                ]);
+            }
+            event(new PaymentStatusChanged($payment));
         }
         return response()->json([], 200);
     }
@@ -99,16 +109,16 @@ class PaymentController extends Controller
      * Check the status of the payment after user confirmation
      *
      * @param Request $request
-     * @param int $order
+     * @param int $orderId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function redirect(Request $request, int $order)
+    public function redirect(Request $request, int $orderId)
     {
-        $payment = YandexMoneyPayment::where('order_id', $order)->orderBy('id', 'DESC')->firstOrFail();
+        $payment = YandexMoneyPayment::where('order_id', $orderId)->orderBy('id', 'DESC')->firstOrFail();
         $failedRoute = config('yandex-money-checkout.failed_route');
         $successRoute = config('yandex-money-checkout.success_route');
         $redirectRoute = ($payment->status->name === 'waiting_for_capture')?$successRoute:$failedRoute;
-        return response()->redirectToRoute($redirectRoute, ['order' => $order]);
+        return response()->redirectToRoute($redirectRoute, ['order' => $orderId]);
     }
 
     /**

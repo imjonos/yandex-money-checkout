@@ -1,4 +1,4 @@
-# yandex-money-checkout
+# Laravel yandex money checkout
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Travis](https://img.shields.io/travis/codersStudio/yandex-money-checkout.svg?style=flat-square)]()
@@ -9,6 +9,7 @@
 
 ## Usage
 This is package provide base Controller and views for implement Yandex Money payments
+It's provide webhook url https://some.com/payments/webhook
 
 Config file:
 
@@ -23,8 +24,8 @@ Config file:
     'capture' => false,
 
     //Redirect
-    //Should include order_id in url template
-    //Example: /test/{order_id}
+    //Should include order in url template
+    //Example: /test/{order}
      'success_route' => env('YANDEX_MONEY_SUCCESS_ROUTE', 'yandexmoneycheckout.payments.success'),
      'failed_route' => env('YANDEX_MONEY_FAIL_ROUTE', 'yandexmoneycheckout.payments.failed')
 
