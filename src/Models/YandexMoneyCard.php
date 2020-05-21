@@ -10,7 +10,8 @@ class YandexMoneyCard extends Model
         'first6',
         'last4',
         'card_type',
-        'yandex_money_payment_id'
+        'yandex_money_payment_id',
+        'method_id'
     ];
 
     /**

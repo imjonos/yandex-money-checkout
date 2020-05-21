@@ -2,8 +2,10 @@
 namespace CodersStudio\YandexMoneyCheckout\Tests;
 
 use App\User;
+use CodersStudio\YandexMoneyCheckout\Models\YandexMoneyPayment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestResponse;
+use CodersStudio\YandexMoneyCheckout\Facades\YandexMoneyCheckout;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\CreatesApplication;
@@ -18,7 +20,7 @@ class PaymentControllerTest extends BaseTestCase
     }
 
     /**
-     * Show feature test.
+     * Store feature test.
      *
      * @return void
      */
@@ -38,7 +40,6 @@ class PaymentControllerTest extends BaseTestCase
                     'vat_code' => 1
                 ]
             ],
-
         ];
         $response = $this->actingAs($user)->ajax('post', route('yandexmoneycheckout.payments.store'), $data);
         $response->assertStatus(201);

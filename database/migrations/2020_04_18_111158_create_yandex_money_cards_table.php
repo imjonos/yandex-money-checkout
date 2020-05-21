@@ -18,6 +18,7 @@ class CreateYandexMoneyCardsTable extends Migration
             $table->string("first6");
             $table->string("last4");
             $table->string("card_type");
+            $table->string("method_id");
             $table->integer('yandex_money_payment_id')->unsigned()->index();
             $table->timestamps();
         });

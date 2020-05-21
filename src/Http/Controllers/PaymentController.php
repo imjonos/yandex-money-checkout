@@ -96,6 +96,7 @@ class PaymentController extends Controller
                     "first6" => $card['first6'],
                     "last4" => $card['last4'],
                     "card_type" => $card['card_type'],
+                    "method_id" => $paymentMethod['id'],
                     "yandex_money_payment_id" => $payment->id
                 ]);
             }
