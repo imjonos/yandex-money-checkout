@@ -58,11 +58,12 @@ class YandexMoneyCheckout
     }
 
     /**
-     * Capture payment
+     *  Cancel payment
+     *
      * @param YandexMoneyPayment $payment
      * @return \YandexCheckout\Request\Payments\Payment\CancelResponse
      */
-    public function capture(YandexMoneyPayment $payment)
+    public function cancel(YandexMoneyPayment $payment)
     {
         $response = null;
         if($payment->status->name === 'waiting_for_capture') {
@@ -79,11 +80,12 @@ class YandexMoneyCheckout
     }
 
     /**
-     * Cancel payment
+     * Capture payment
+     *
      * @param YandexMoneyPayment $payment
      * @return \YandexCheckout\Request\Payments\Payment\CreateCaptureResponse|null
      */
-    public function cancel(YandexMoneyPayment $payment)
+    public function capture(YandexMoneyPayment $payment)
     {
         $response = null;
         if($payment->status->name === 'waiting_for_capture') {
