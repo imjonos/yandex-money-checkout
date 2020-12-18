@@ -24,9 +24,11 @@ class PaymentController extends Controller
     {
         $data = $request->validated();
         $items = [];
+        $amount = 0;
 
         foreach ($data['items'] AS $item) {
             $value = $item;
+            $amount+=(float)$item['amount']*(int)$item['quantity'];
             $value['amount'] = [
                 'value' => $item['amount'],
                 'currency' => config('yandex-money-checkout.currency')
@@ -34,10 +36,9 @@ class PaymentController extends Controller
             $items[] = $value;
         }
 
-
         $paymentData = [
             'amount' => [
-                'value' => $data['amount'],
+                'value' => $amount,
                 'currency' => config('yandex-money-checkout.currency')
             ],
             'payment_method_data' => [
